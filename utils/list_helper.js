@@ -16,8 +16,25 @@ const totalLikesAllBlogs = (listWithBlogs) => {
 	return allLikes
 }
 
+const mostLikedBlog = (listWithBlogs) => {
+	let blogWithMostLikes = {
+		likes: 0
+	}
+
+	for (let i = 0; i < listWithBlogs.length; i++) {
+		const blog = listWithBlogs[i];
+
+		if (blog.likes > blogWithMostLikes.likes ) {
+			blogWithMostLikes = blog
+		}
+	}
+
+	return blogWithMostLikes 
+}
+
 module.exports = {
     dummy,
 		totalLikes,
-		totalLikesAllBlogs
+		totalLikesAllBlogs,
+		mostLikedBlog
 }
