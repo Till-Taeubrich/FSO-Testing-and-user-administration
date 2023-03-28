@@ -62,6 +62,16 @@ test('if url property is missing respond with status 400 Bad Request.', async ()
   expect(postRequest.status).toBe(400);
 }, 100000)
 
+test.only('respond with status 204 after removing single blog', async () => {
+  const allBlogs = await api.get('/api/blogs')
+  const blogToDelete = allBlogs.body[0];
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+}, 100000)
+
 afterAll(async () => {
   await mongoose.connection.close()
 }, 100000)
