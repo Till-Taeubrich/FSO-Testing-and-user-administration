@@ -44,6 +44,18 @@ test('if the likes property is missing it will default to the value 0', async ()
   expect(returnedData.likes).toBe(0)
 })
 
+test('if title property is missing respond with status 400 Bad Request.', async () => {
+  const postRequest = await api.post('/api/blogs').send(helper.newBlogWithoutTitle)
+
+  expect(postRequest.status).toBe(400);
+}, 100000)
+
+test('if url property is missing respond with status 400 Bad Request.', async () => {
+  const postRequest = await api.post('/api/blogs').send(helper.newBlogWithoutUrl)
+
+  expect(postRequest.status).toBe(400);
+}, 100000)
+
 afterAll(async () => {
   await mongoose.connection.close()
 }, 100000)
