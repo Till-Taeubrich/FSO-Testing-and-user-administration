@@ -9,10 +9,16 @@ const api = supertest(app)
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  helper.initialBlogs.forEach(async (blog) => {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
+  const blogObjects = helper.initialBlogs.map(blog => {
+    return new Blog(blog)
   })
+
+  const promiseArray = blogObjects.map(blog => {
+    blog.save()
+  })
+
+  await Promise.all(promiseArray);
+  
 }, 100000)
 
 test('right amount of blogs are returned', async () => {
