@@ -62,7 +62,7 @@ test('if url property is missing respond with status 400 Bad Request.', async ()
   expect(postRequest.status).toBe(400);
 }, 100000)
 
-test.only('respond with status 204 after removing single blog', async () => {
+test('respond with status 204 after removing single blog', async () => {
   const allBlogs = await api.get('/api/blogs')
   const blogToDelete = allBlogs.body[0];
 
@@ -70,6 +70,20 @@ test.only('respond with status 204 after removing single blog', async () => {
     .delete(`/api/blogs/${blogToDelete.id}`)
     .expect(204)
 
+}, 100000)
+
+test('put request updates "likes" property', async () => {
+  const allBlogs = await api.get('/api/blogs')
+  const blogToUpdate= allBlogs.body[1];
+  const newLikesData = {
+    "likes": 1
+  }
+
+  const updatedBlog = await api.put(`/api/blogs/${blogToUpdate.id}`).send(newLikesData)
+
+  const newLikeAmount = updatedBlog.body.likes;
+
+  expect(newLikeAmount).toBe(1)
 }, 100000)
 
 afterAll(async () => {
