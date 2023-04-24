@@ -48,7 +48,7 @@ const usersInDb = async () => {
 }
 
 const initialUsers = {
-  username: 'tillo',
+  username: 'till',
   name: 'Till',
   password: 'wurst',
 }

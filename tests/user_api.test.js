@@ -14,7 +14,7 @@ test('creation fails with proper statuscode and message if username already take
   const usersAtStart = await helper.usersInDb()
 
   const newUser = {
-    username: 'tillo',
+    username: 'till',
     name: 'Till',
     password: 'wurst',
   }
