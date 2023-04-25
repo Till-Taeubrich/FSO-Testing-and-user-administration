@@ -25,8 +25,6 @@ test('creation fails with proper statuscode and message if username already take
     .expect(400)
     .expect('Content-Type', /application\/json/)
 
-    console.log(result.body.error);
-
   expect(result.body.error).toContain('expected `username` to be unique')
 
   const usersAtEnd = await helper.usersInDb()
