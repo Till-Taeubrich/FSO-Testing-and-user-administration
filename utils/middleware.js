@@ -11,4 +11,11 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-module.exports = errorHandler
+const tokenExtractor = (error, request, response, next) => {
+
+}
+
+module.exports = {
+  errorHandler,
+  tokenExtractor
+}
