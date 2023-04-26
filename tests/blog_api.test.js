@@ -2,7 +2,10 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 
@@ -32,8 +35,19 @@ test('unique identifier property is named "id"', async () => {
   expect(request.body[0].id).toBeDefined()
 })
 
-test('HTTP POST request to /api/blogs successfully creates a new blog post', async () => {
-  const postRequest = await api.post('/api/blogs').send(helper.newBlog)
+test.only('HTTP POST request to /api/blogs successfully creates a new blog post', async () => {
+
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash("randomPassword", 10);
+  const user = await new User({ username: "name", password: passwordHash }).save();
+
+  const userForToken = { username: user.username, id: user.id };
+
+  const token = jwt.sign(userForToken, process.env.jwtSecret);
+
+  await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(helper.newBlog)
+
   const getRequest = await api.get('/api/blogs')
 
   const allBlogs = getRequest.body
