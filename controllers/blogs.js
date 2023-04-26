@@ -20,15 +20,13 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.post('/', async (request, response) => {
 
-  const decodedToken = jwt.verify(getToken(request), process.env.jwtSecret)
-
-  if (!decodedToken.id) {
+  if (!request.token) {
     return response.status(401).json({ error: 'token invalid' })
   }
 
   let blog = new Blog(request.body)
 
-  blog.user = decodedToken.id
+  blog.user = request.token
 
   if(blog.likes === undefined) {
     blog.likes = 0
