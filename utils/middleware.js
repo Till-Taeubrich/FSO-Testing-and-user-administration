@@ -13,10 +13,9 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-const getToken = request => {
-  const authorization = request.get('authorization')
+const getToken = (authorization) => {
 
-  if (authorization.startsWith('Bearer ')) {
+  if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
   }
 
@@ -24,9 +23,12 @@ const getToken = request => {
 }
 
 const tokenExtractor = (request, response, next) => {
-  const decodedToken = jwt.verify(getToken(request), process.env.jwtSecret)
+  const authorization = request.get('authorization')
 
-  request.token = decodedToken.id
+  if (authorization) {
+    const decodedToken = jwt.verify(getToken(authorization), process.env.jwtSecret)
+    request.token = decodedToken.id
+  }
   
   next()
 }
