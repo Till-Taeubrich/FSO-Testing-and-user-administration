@@ -8,22 +8,17 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-
-  if (!request.token) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-
   let blog = new Blog(request.body)
-
-  blog.user = request.token
-
-  if(blog.likes === undefined) {
-    blog.likes = 0
-  }
 
   if (blog.url === undefined || blog.title === undefined) {
     response.status(400).end()
   } else {
+    blog.user = request.userId
+
+    if(blog.likes === undefined) {
+      blog.likes = 0
+    }
+
     const result = await blog.save()
     response.status(201).json(result)
   }
@@ -31,16 +26,15 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-
   const blog = await Blog.findById(request.params.id)
-  const tokenId = request.token
-  const blogOwnerId = blog ? blog.user.toString() : null
 
   if (!blog) {
     response.status(404).end()
   }
 
-  if (tokenId !== blogOwnerId) {
+  const blogOwnerId = blog.user.toString()
+
+  if (request.userId !== blogOwnerId) {
     response.status(403).end()
     return
   }
