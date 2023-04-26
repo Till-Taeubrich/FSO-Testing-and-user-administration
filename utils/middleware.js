@@ -32,7 +32,6 @@ const userExtractor = async (request, response, next) => {
 
     if (currentUser) {
       request.user = currentUser
-      console.log(currentUser);
       request.userId = currentUser._id.toString()
     }
   }
