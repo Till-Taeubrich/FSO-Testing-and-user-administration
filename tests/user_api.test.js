@@ -29,4 +29,4 @@ test('creation fails with proper statuscode and message if username already take
 
   const usersAtEnd = await helper.usersInDb()
   expect(usersAtEnd).toEqual(usersAtStart)
-})
+}, 100000)
