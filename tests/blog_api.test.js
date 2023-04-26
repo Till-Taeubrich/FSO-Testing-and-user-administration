@@ -13,17 +13,16 @@ beforeEach(async () => {
     return new Blog(blog)
   })
 
-  const promiseArray = blogObjects.map(blog => {
-    blog.save()
+  const promiseArray = blogObjects.map(async (blog) => {
+    await blog.save()
   })
 
   await Promise.all(promiseArray);
-  
-}, 100000)
+})
 
 test('right amount of blogs are returned', async () => {
   const request = await api.get('/api/blogs')
-  
+
   expect(request.body).toHaveLength(2)
 })
 
