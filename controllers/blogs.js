@@ -1,16 +1,6 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-const getToken = request => {
-  const authorization = request.get('authorization')
-
-  if (authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-
-  return
-}
-
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user')
 
@@ -41,6 +31,20 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
+
+  const blog = await Blog.findById(request.params.id)
+  const tokenId = request.token
+  const blogOwnerId = blog ? blog.user.toString() : null
+
+  if (!blog) {
+    response.status(404).end()
+  }
+
+  if (tokenId !== blogOwnerId) {
+    response.status(403).end()
+    return
+  }
+
   await Blog.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
