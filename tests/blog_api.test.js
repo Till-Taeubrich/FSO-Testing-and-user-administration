@@ -35,7 +35,7 @@ test('unique identifier property is named "id"', async () => {
   expect(request.body[0].id).toBeDefined()
 })
 
-test.only('HTTP POST request to /api/blogs successfully creates a new blog post', async () => {
+test('HTTP POST request to /api/blogs successfully creates a new blog post', async () => {
 
   await User.deleteMany({});
 
@@ -76,11 +76,21 @@ test('if url property is missing respond with status 400 Bad Request.', async ()
 }, 100000)
 
 test('respond with status 204 after removing single blog', async () => {
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash("randomPassword", 10);
+  const user = await new User({ username: "name", password: passwordHash }).save();
+  const userForToken = { username: user.username, id: user.id };
+
+  const token = jwt.sign(userForToken, process.env.jwtSecret);
+  await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(helper.newBlog)
+
   const allBlogs = await api.get('/api/blogs')
-  const blogToDelete = allBlogs.body[0];
+  const blogToDelete = allBlogs.body[2];
 
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
+    .set('Authorization', `Bearer ${token}`)
     .expect(204)
 
 }, 100000)
