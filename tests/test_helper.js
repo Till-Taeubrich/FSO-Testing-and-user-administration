@@ -1,5 +1,4 @@
 const User = require('../models/user')
-const bcrypt = require('bcrypt')
 
 // blogs
 const initialBlogs = [
@@ -7,13 +6,15 @@ const initialBlogs = [
     title: 'How to cook',
     author: 'till',
     url: 'test 1',
-    likes: 1
+    likes: 1,
+    id: '123'
   },
   {
     title: 'Run faster',
     author: 'robin',
     url: 'test 2',
-    likes: 4
+    likes: 4,
+    id: '321'
   }
 ]
 
