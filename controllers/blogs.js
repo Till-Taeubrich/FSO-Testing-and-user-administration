@@ -12,6 +12,8 @@ blogsRouter.post('/', async (request, response) => {
 
   if (blog.url === undefined || blog.title === undefined) {
     response.status(400).end()
+  } else if (request.userId !== blog.user) {
+    response.status(401).end()
   } else {
     blog.user = request.userId
 

@@ -55,6 +55,21 @@ test('HTTP POST request to /api/blogs successfully creates a new blog post', asy
   expect(allBlogs).toHaveLength(helper.initialBlogs.length + 1)
 }, 100000)
 
+test('adding blog with wrong token responds with status code 401', async () => {
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash("randomPassword", 10);
+  const user = await new User({ username: "name", password: passwordHash }).save();
+
+  const userForToken = { username: user.username, id: user.id };
+
+  const wrongToken = jwt.sign(userForToken, process.env.jwtSecret);
+
+  const postRequestWithWrongToken = await api.post('/api/blogs').set('Authorization', `Bearer ${wrongToken}`).send(helper.newBlog)
+
+  expect(postRequestWithWrongToken.status).toBe(401)
+}, 100000)
+
 test('if the likes property is missing it will default to the value 0', async () => {
   const postRequest = await api.post('/api/blogs').send(helper.newBlogWithoutLikes)
 
