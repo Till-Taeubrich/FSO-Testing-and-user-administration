@@ -10,7 +10,7 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/', async (request, response) => {
   let blog = new Blog(request.body)
 
-  if (blog.url === undefined || blog.title === undefined) {
+  if (!blog.url || !blog.title) {
     response.status(400).end()
   } else if (!request.userId) {
     response.status(401).end()
