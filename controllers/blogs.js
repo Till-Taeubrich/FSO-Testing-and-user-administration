@@ -16,6 +16,7 @@ blogsRouter.post('/', async (request, response) => {
     response.status(401).end()
   } else {
     blog.user = request.userId
+    blog.username = request.user.username
 
     if(blog.likes === undefined) {
       blog.likes = 0
