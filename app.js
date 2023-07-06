@@ -21,6 +21,14 @@ app.use('/api/login', loginRouter)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 
+if (process.env.NODE_ENV === 'test') {
+  console.log('Testing environment active')
+
+  const resetRouter = require('./controllers/reset')
+  app.use('/api/testing', resetRouter)
+}
+
+
 app.use(middleware.errorHandler)
 
 module.exports = app
